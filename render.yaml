@@ -1,1 +1,41 @@
+services:
+  - type: worker # Use 'worker' for polling bots. Use 'web' for webhooks/healthchecks.
+    name: telegram-ai-bot # Choose a name for your service
+    env: python # Specify environment as Python
+    region: singapore # Optional: Choose a region close to you or your users (e.g., frankfurt, ohio, oregon)
+    plan: free # Optional: Specify instance plan (check Render pricing)
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt" # Command to install dependencies
+    startCommand: "python bot.py" # Command to start the bot polling
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11 # Specify the Python version you are using
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false # Don't sync secrets from yaml, set in Render UI
+      - key: ADMIN_USER_IDS # Example: 12345678,98765432
+        sync: false # Don't sync secrets from yaml, set in Render UI
+      - key: AI_API_KEY # Example, add your actual needed keys
+        sync: false
+      - key: LOG_LEVEL
+        value: INFO # Set default log level
+
+# Optional: Persistent Disk for user data storage (if using file persistence)
+# databases: # Incorrect section for disk, should be under service or separate disk definition
+#   - name: bot-data
+#     disk:
+#       name: user-data-disk
+#       mountPath: /data # Mount path inside the container
+#       sizeGB: 1 # Minimum size
+
+# Correct way to add a disk (if needed):
+# Disks need to be created manually in Render UI first, then referenced.
+# Or defined separately if Render supports full disk definition in blueprint (check docs).
+# Mount it under the service definition:
+# services:
+#   - type: worker
+#     name: telegram-ai-bot
+#     # ... other settings ...
+#     disk:
+#       name: user-data-disk # Name of the disk created in Render UI
+#       mountPath: /app/data # Mount inside your app directory
+#       # Make sure USER_DATA_FILE in user_management.py points here e.g. /app/data/user_data.json
 
