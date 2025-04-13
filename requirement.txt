@@ -1,1 +1,5 @@
-
+python-telegram-bot[job-queue]>=20.5,<22.0 # Use specific version range
+waitress>=2.1.2
+python-dotenv>=1.0.0  # For local .env file loading
+requests            # If your AI uses APIs
+Pillow              # For basic image handling
